@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input class="form-control" id="generateInput" type="text" value="" >
+                    <button class="generate-btn" onclick="buttonGenerate()">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input class="form-control" id="userInput" type="text" value="" >
+                    <div class="numbers">
+                        <div class="calc-body" id="calcBody">
+                            <div class="calc-button-row">
+                              <div class="button">7</div>
+                              <div class="button">8</div>
+                              <div class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button">4</div>
+                              <div class="button">5</div>
+                              <div class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button">1</div>
+                              <div class="button">2</div>
+                              <div class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button" id="deleteButton"><</div>
+                                <div class="button">0</div>
+                                <div class="button" id="clearButton">C</div>
+                            </div>
+                            <div>
+                                <button type="submit" class="submit-btn" id="userInputSubmit" onclick="userInputSubmit()">Submit</button>
+                                <p class="action-left" id="tryLeft">3</span> try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p class="notify" id="passwordWrong">❌ Pin Didn't Match, Please tryLeft again</p>
+            <p class="notify" id="passwordMatched">✅ Pin Matched... Secret door is opening for you</p>
+            <p class="notify" id="disableMessage">❌ Pin wrong many times...so now you are blocked!!</p>
+
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+
+<script>
+    document.getElementById('calcBody').addEventListener('click',function(e){
+        let userInput = document.getElementById('userInput');
+        userInput.style.textAlign = "center";
+
+        if(userInput.value.length<4){
+            if(e.target.className == 'button'){
+                if(e.target.id!='deleteButton' && e.target.id!='userInputSubmit' && e.target.id != 'tryLeft'){
+                    userInput.value += e.target.innerText;
+            }
+        }
+        }
+        
+
+        if(e.target.id == 'clearButton') {
+            userInput.value = '';
+            }
+
+        if(e.target.id =='deleteButton'){
+            userInput.value = userInput.value.slice(0,-1);
+            }
+        
+    })
+
+    function buttonGenerate(){
+        let inputValue = document.getElementById('generateInput');
+        inputValue.value = Math.round(1000+Math.random()*8999);
+        inputValue.style.textAlign = "center"
+        document.getElementById('passwordMatched').style.display = 'none'
+
+    }
+    
+
+    function userInputSubmit(){
+        
+        let generateInputValue = document.getElementById('generateInput').value;
+        let userInputValue = document.getElementById('userInput').value;
+    
+        if(generateInputValue>=0 && userInputValue>=0){
+            if((generateInputValue == "" && userInputValue=="")||generateInputValue == "" ||userInputValue==""){
+            alert('pin is not generated or you do not give the pin')
+            }
+            else if(generateInputValue === userInputValue){
+                document.getElementById('passwordMatched').style.display = 'block';
+                document.getElementById('passwordWrong').style.display = 'none';
+                document.getElementById('generateInput').value = "";
+                document.getElementById('tryLeft').innerText = 3 + ' try left';
+        }
+
+        else{
+            document.getElementById('passwordWrong').style.display = 'block';
+            document.getElementById('passwordMatched').style.display = 'none';
+            
+        
+            let tryLeft = parseInt(document.getElementById('tryLeft').innerText);
+            tryLeft = tryLeft-1;
+        
+            if(tryLeft>0){
+                if(userInputValue.length<4){
+                alert('please enter 4 digit correct pin' );
+            }
+                document.getElementById('tryLeft').innerText = tryLeft +' try left';
+            }
+
+            else{
+                document.getElementById('tryLeft').innerText = tryLeft +' try left';
+                document.getElementById('userInputSubmit').disabled = true;
+                document.getElementById('disableMessage').style.display = 'block';
+                document.getElementById('passwordWrong').style.display = 'none';
+                document.getElementById('passwordMatched').style.display = 'none';
+            }
+        }
+        
+
+        document.getElementById('userInput').value = "";
+    }
+
+
+}
+
+</script>
+</html>
